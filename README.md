@@ -21,12 +21,6 @@ The code below is used by the console application to construct a `SearchListLoad
 ``` csharp
 private static ListOutputRow[] Search(string lastName, string firstName)
 {
-    // Initialize web service
-    AppFxWebService service = new AppFxWebService
-    {
-        Url = "http://<web_server>/<virtual_directory>/AppFxWebService.asmx"
-    };
-
     // Set credentials
     NetworkCredential credentials = new NetworkCredential
     {
@@ -34,17 +28,12 @@ private static ListOutputRow[] Search(string lastName, string firstName)
         UserName = "<username>",
         Password = "<password>"
     };
-    service.Credentials = credentials;
-
-    // Create request
-    SearchListLoadRequest request = new SearchListLoadRequest
+    
+    // Initialize web service
+    AppFxWebService service = new AppFxWebService
     {
-        SearchListID = new Guid("fdf9d631-5277-4300-80b3-fdf5fb8850ec"), // ConstituentByNameOrLookupId.Search.xml
-        ClientAppInfo = new ClientAppInfoHeader
-        {
-            ClientAppName = "Sample Application",
-            REDatabaseToUse = "<database>"
-        }
+        Url = "http://<web_server>/<virtual_directory>/AppFxWebService.asmx",
+        Credentials = credentials
     };
 
     // Define filters for the search list
@@ -54,12 +43,20 @@ private static ListOutputRow[] Search(string lastName, string firstName)
         new DataFormFieldValue("FIRSTNAME", firstName)
     };
 
-    DataFormItem filter = new DataFormItem
+    // Create request
+    SearchListLoadRequest request = new SearchListLoadRequest
     {
-        Values = fieldValueSet
+        SearchListID = new Guid("fdf9d631-5277-4300-80b3-fdf5fb8850ec"), // ConstituentByNameOrLookupId.Search.xml
+        ClientAppInfo = new ClientAppInfoHeader
+        {
+            ClientAppName = "Sample Application",
+            REDatabaseToUse = "<database>"
+        },
+        Filter = new DataFormItem
+        {
+            Values = fieldValueSet
+        }
     };
-
-    request.Filter = filter;
 
     // Run search
     SearchListLoadReply reply = service.SearchListLoad(request);
