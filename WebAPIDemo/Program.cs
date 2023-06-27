@@ -7,9 +7,9 @@ namespace WebAPIDemo
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            Console.Write("Enter your search critera: ");
+            Console.Write("Enter your search criteria: ");
 
             // Collect search criteria
             string input = Console.ReadLine();
@@ -67,7 +67,7 @@ namespace WebAPIDemo
                 UserName = "<username>",
                 Password = "<password>"
             };
-            
+
             // Initialize web service
             AppFxWebService service = new AppFxWebService
             {
